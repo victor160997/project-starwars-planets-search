@@ -7,4 +7,4 @@ function App() {
   );
 }
 
-export default App; //gerg
+export default App; // gerg
