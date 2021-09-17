@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Context from './context/Context';
 
 function Table() {
@@ -6,51 +6,90 @@ function Table() {
   const { data, loaded } = context;
   const { results } = data;
 
-  function renderTable() {
-    console.log(data);
-    return results.map((planet) => {
-      const { name,
-        diameter,
-        climate,
-        gravity,
-        terrain,
-        population,
-        films,
-        created,
-        edited,
-        url,
-      } = planet;
+  const [filter, setFilter] = useState({
+    filters: {
+      filterByName: {
+        name: '',
+      },
+    },
+  });
 
-      const renderFilmes = () => (
-        (
+  const nome = filter.filters.filterByName.name;
+  /* const lowerBusca = filter.toLowerCase();
+        const planetasFiltrados = results
+          .filter((planetFilter) => planetFilter.name.toLowerCase().includes(lowerBusca));
+        console.log(planetasFiltrados);
+        return (
           <ul>
-            { films.map((f) => (<li key={ f }><a href={ f }>{ f }</a></li>)) }
+            { planetasFiltrados
+              .map((f) => (<li key={ f }><a href={ f }>{ f }</a></li>)) }
           </ul>
-        )
-      );
+        ); */
 
-      return (
-        <tr key={ planet.name }>
-          <td>{ name }</td>
-          <td>{ planet.rotation_period }</td>
-          <td>{ planet.orbital_period }</td>
-          <td>{ diameter }</td>
-          <td>{ climate }</td>
-          <td>{ gravity }</td>
-          <td>{ terrain }</td>
-          <td>{ planet.surface_water }</td>
-          <td>{ population }</td>
-          <td>{ renderFilmes() }</td>
-          <td>{ created }</td>
-          <td>{ edited }</td>
-          <td>{ url }</td>
-        </tr>
-      );
-    });
+  function criaTable(planet) {
+    const { name,
+      diameter,
+      climate,
+      gravity,
+      terrain,
+      population,
+      films,
+      created,
+      edited,
+      url,
+    } = planet;
+
+    const renderFilmes = () => (
+      (
+        <ul>
+          { films.map((f) => (<li key={ f }><a href={ f }>{ f }</a></li>)) }
+        </ul>
+      )
+    );
+
+    return (
+      <tr key={ planet.name }>
+        <td>{ name }</td>
+        <td>{ planet.rotation_period }</td>
+        <td>{ planet.orbital_period }</td>
+        <td>{ diameter }</td>
+        <td>{ climate }</td>
+        <td>{ gravity }</td>
+        <td>{ terrain }</td>
+        <td>{ planet.surface_water }</td>
+        <td>{ population }</td>
+        <td>{ renderFilmes() }</td>
+        <td>{ created }</td>
+        <td>{ edited }</td>
+        <td>{ url }</td>
+      </tr>
+    );
+  }
+
+  function renderTable() {
+    if (nome === '') {
+      return results.map((planet) => (criaTable(planet)));
+    }
+    const lowerBusca = nome.toLowerCase();
+    const planetasFiltrados = results
+      .filter((planetFilter) => planetFilter.name.toLowerCase().includes(lowerBusca));
+    return planetasFiltrados.map((planet) => (criaTable(planet)));
   }
 
   return (
     <div>
+      <input
+        data-testid="name-filter"
+        type="text"
+        value={ nome }
+        onChange={ (e) => setFilter({
+          filters: {
+            filterByName: {
+              name: e.target.value,
+            },
+          },
+        }) }
+      />
       <table border="1">
         <tr>
           <th>Nome</th>
