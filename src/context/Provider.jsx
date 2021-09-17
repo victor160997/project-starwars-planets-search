@@ -12,20 +12,6 @@ const Provider = ({ children }) => {
   useEffect(() => {
     async function fetchPlanets() {
       const theData = await fetch(url).then((response) => response.json());
-      /* const { name,
-        rotation_period,
-        orbital_period,
-        diameter,
-        climate,
-        gravity,
-        terrain,
-        surface_water,
-        population,
-        films,
-        created,
-        edited,
-        url,
-      } = results; */
 
       setData({
         data: theData,
