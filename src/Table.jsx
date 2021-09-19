@@ -11,14 +11,14 @@ function Table() {
       filterByName: {
         name: '',
       },
-      filterByNumericValues: [
-        {
-          column: 'population',
-          comparison: 'maior que',
-          value: 0,
-        },
-      ],
+      filterByNumericValues: [],
     },
+  });
+
+  const [preFIlter, serPreFilter] = useState({
+    column: 'population',
+    comparison: 'maior que',
+    value: 0,
   });
 
   const [list, setList] = useState({
@@ -32,9 +32,10 @@ function Table() {
   }, [loaded, results]);
 
   const nome = filter.filters.filterByName.name;
-  const { column } = filter.filters.filterByNumericValues[0];
+
+  /*  const { column } = filter.filters.filterByNumericValues[0];
   const { comparison } = filter.filters.filterByNumericValues[0];
-  const valueNumeric = filter.filters.filterByNumericValues[0].value;
+  const valueNumeric = filter.filters.filterByNumericValues[0].value; */
 
   function criaTable(planet) {
     const { name,
@@ -77,28 +78,49 @@ function Table() {
   }
 
   function filterTabel() {
+    const pai = document.getElementById('column-filter');
+    const child = document.getElementById(preFIlter.column);
+    pai.removeChild(child);
+    setFilter({
+      filters: {
+        ...filter.filters,
+        filterByNumericValues: filter.filters.filterByNumericValues.concat(
+          {
+            column: preFIlter.column,
+            comparison: preFIlter.comparison,
+            value: preFIlter.value,
+          },
+        ),
+      },
+    });
     const lowerBusca = nome.toLowerCase();
     const filterName = list.list
       .filter((planetFilter) => planetFilter.name.toLowerCase().includes(lowerBusca));
-    if (comparison === 'maior que') {
+    if (preFIlter.comparison === 'maior que') {
       const planetasFiltrados = filterName
-        .filter((planetFilter) => Number(planetFilter[column]) > Number(valueNumeric));
+        .filter((planetFilter) => (
+          Number(planetFilter[preFIlter.column]) > Number(preFIlter.value)
+        ));
       console.log(planetasFiltrados);
       setList({
         list: planetasFiltrados,
       });
     }
-    if (comparison === 'menor que') {
+    if (preFIlter.comparison === 'menor que') {
       const planetasFiltrados = filterName
-        .filter((planetFilter) => Number(planetFilter[column]) < Number(valueNumeric));
+        .filter((planetFilter) => (
+          Number(planetFilter[preFIlter.column]) < Number(preFIlter.value)
+        ));
       console.log(planetasFiltrados);
       setList({
         list: planetasFiltrados,
       });
     }
-    if (comparison === 'igual a') {
+    if (preFIlter.comparison === 'igual a') {
       const planetasFiltrados = filterName
-        .filter((planetFilter) => Number(planetFilter[column]) === Number(valueNumeric));
+        .filter((planetFilter) => (
+          Number(planetFilter[preFIlter.column]) === Number(preFIlter.value)
+        ));
       console.log(planetasFiltrados);
       setList({
         list: planetasFiltrados,
@@ -131,39 +153,26 @@ function Table() {
           }) }
         />
         <select
+          id="column-filter"
           data-testid="column-filter"
-          value={ column }
-          onChange={ (e) => setFilter({
-            filters: {
-              ...filter.filters,
-              filterByNumericValues: [
-                {
-                  ...filter.filters.filterByNumericValues[0],
-                  column: e.target.value,
-                },
-              ],
-            },
+          value={ preFIlter.column }
+          onChange={ (e) => serPreFilter({
+            ...preFIlter,
+            column: e.target.value,
           }) }
         >
-          <option value="population">population</option>
-          <option value="orbital_period">orbital_period</option>
-          <option value="diameter">diameter</option>
-          <option value="rotation_period">rotation_period</option>
-          <option value="surface_water">surface_water</option>
+          <option value="population" id="population">population</option>
+          <option value="orbital_period" id="orbital_period">orbital_period</option>
+          <option value="diameter" id="diameter">diameter</option>
+          <option value="rotation_period" id="rotation_period">rotation_period</option>
+          <option value="surface_water" id="surface_water">surface_water</option>
         </select>
         <select
           data-testid="comparison-filter"
-          value={ comparison }
-          onChange={ (e) => setFilter({
-            filters: {
-              ...filter.filters,
-              filterByNumericValues: [
-                {
-                  ...filter.filters.filterByNumericValues[0],
-                  comparison: e.target.value,
-                },
-              ],
-            },
+          value={ preFIlter.comparison }
+          onChange={ (e) => serPreFilter({
+            ...preFIlter,
+            comparison: e.target.value,
           }) }
         >
           <option value="maior que">maior que</option>
@@ -173,17 +182,10 @@ function Table() {
         <input
           data-testid="value-filter"
           type="number"
-          value={ valueNumeric }
-          onChange={ (e) => setFilter({
-            filters: {
-              ...filter.filters,
-              filterByNumericValues: [
-                {
-                  ...filter.filters.filterByNumericValues[0],
-                  value: e.target.value,
-                },
-              ],
-            },
+          value={ preFIlter.value }
+          onChange={ (e) => serPreFilter({
+            ...preFIlter,
+            value: e.target.value,
           }) }
         />
         <button
@@ -218,18 +220,14 @@ function Table() {
 
 export default Table; // gerg
 
-/*  if (comparison === 'maior que') {
-      const planetasFiltrados = filterName
-        .filter((planetFilter) => planetFilter[column] > valueNumeric);
-      return planetasFiltrados.map((planet) => (criaTable(planet)));
-    }
-    if (comparison === 'menor que') {
-      const planetasFiltrados = filterName
-        .filter((planetFilter) => planetFilter[column] < valueNumeric);
-      return planetasFiltrados.map((planet) => (criaTable(planet)));
-    }
-    if (comparison === 'igual a') {
-      const planetasFiltrados = filterName
-        .filter((planetFilter) => planetFilter[column] < valueNumeric);
-      return planetasFiltrados.map((planet) => (criaTable(planet)));
-    } */
+/* {
+            filters: {
+              ...filter.filters,
+              filterByNumericValues: [
+                {
+                  ...filter.filters.filterByNumericValues[0],
+                  column: e.target.value,
+                },
+              ],
+            },
+          } */
