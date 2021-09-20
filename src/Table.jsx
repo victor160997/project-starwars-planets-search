@@ -33,46 +33,63 @@ function Table() {
 
   const nome = filter.filters.filterByName.name;
 
-  /*  const { column } = filter.filters.filterByNumericValues[0];
-  const { comparison } = filter.filters.filterByNumericValues[0];
-  const valueNumeric = filter.filters.filterByNumericValues[0].value; */
+  function criaDrop() {
+    return filter.filters.filterByNumericValues
+      .map((info, i) => (
+        <div key={ i } id={ info.column } data-testid="filter">
+          <span>
+            {`Filtrar por ${info.column} ${info.comparison} ${info.value}`}
+          </span>
+          <button
+            type="button"
+            onClick={ () => {
+              const array = filter.filters.filterByNumericValues;
+              const arrayUpdate = array
+                .filter((e) => (
+                  e !== filter.filters.filterByNumericValues[i]
+                ));
+              setFilter({
+                filters: {
+                  filterByName: filter.filters.filterByName,
+                  filterByNumericValues: arrayUpdate,
+                },
+              });
+              return setList({
+                list: results,
+              });
+            } }
+          >
+            X
+          </button>
+          <br />
+        </div>
+      ));
+  }
 
   function criaTable(planet) {
-    const { name,
-      diameter,
-      climate,
-      gravity,
-      terrain,
-      population,
-      films,
-      created,
-      edited,
-      url,
-    } = planet;
-
     const renderFilmes = () => (
       (
         <ul>
-          { films.map((f) => (<li key={ f }><a href={ f }>{ f }</a></li>)) }
+          { planet.films.map((f) => (<li key={ f }><a href={ f }>{ f }</a></li>)) }
         </ul>
       )
     );
 
     return (
       <tr key={ planet.name }>
-        <td>{ name }</td>
+        <td>{ planet.name }</td>
         <td>{ planet.rotation_period }</td>
         <td>{ planet.orbital_period }</td>
-        <td>{ diameter }</td>
-        <td>{ climate }</td>
-        <td>{ gravity }</td>
-        <td>{ terrain }</td>
+        <td>{ planet.diameter }</td>
+        <td>{ planet.climate }</td>
+        <td>{ planet.gravity }</td>
+        <td>{ planet.terrain }</td>
         <td>{ planet.surface_water }</td>
-        <td>{ population }</td>
+        <td>{ planet.population }</td>
         <td>{ renderFilmes() }</td>
-        <td>{ created }</td>
-        <td>{ edited }</td>
-        <td>{ url }</td>
+        <td>{ planet.created }</td>
+        <td>{ planet.edited }</td>
+        <td>{ planet.url }</td>
       </tr>
     );
   }
@@ -101,7 +118,6 @@ function Table() {
         .filter((planetFilter) => (
           Number(planetFilter[preFIlter.column]) > Number(preFIlter.value)
         ));
-      console.log(planetasFiltrados);
       setList({
         list: planetasFiltrados,
       });
@@ -111,7 +127,6 @@ function Table() {
         .filter((planetFilter) => (
           Number(planetFilter[preFIlter.column]) < Number(preFIlter.value)
         ));
-      console.log(planetasFiltrados);
       setList({
         list: planetasFiltrados,
       });
@@ -121,7 +136,6 @@ function Table() {
         .filter((planetFilter) => (
           Number(planetFilter[preFIlter.column]) === Number(preFIlter.value)
         ));
-      console.log(planetasFiltrados);
       setList({
         list: planetasFiltrados,
       });
@@ -137,8 +151,8 @@ function Table() {
   }
 
   return (
-    <div>
-      <form>
+    <div id="input-tabel">
+      <form id="input-filter-form">
         <input
           data-testid="name-filter"
           type="text"
@@ -196,6 +210,9 @@ function Table() {
           Adicionar filtro
         </button>
       </form>
+      <div id="drop-filter">
+        { filter.filters.filterByNumericValues.length > 0 ? criaDrop() : '' }
+      </div>
       <table border="1">
         <tr>
           <th>Nome</th>
@@ -219,15 +236,3 @@ function Table() {
 }
 
 export default Table; // gerg
-
-/* {
-            filters: {
-              ...filter.filters,
-              filterByNumericValues: [
-                {
-                  ...filter.filters.filterByNumericValues[0],
-                  column: e.target.value,
-                },
-              ],
-            },
-          } */
