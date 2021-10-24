@@ -11,3 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.theBody {
+  background-image: url('https://images4.alphacoders.com/653/thumb-1920-653613.jpg');
+  background-size: 150vw;
+  height: 140vh;
+  width: min-content;
+  opacity: 1;
+}

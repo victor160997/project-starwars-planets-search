@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Context from './context/Context';
+import './table.css';
 
 function Table() {
   const context = useContext(Context);
@@ -152,7 +153,7 @@ function Table() {
 
   return (
     <div id="input-tabel">
-      <form id="input-filter-form">
+      <form id="input-filter-form" className="form-body">
         <input
           data-testid="name-filter"
           type="text"
@@ -213,7 +214,7 @@ function Table() {
       <div id="drop-filter">
         { filter.filters.filterByNumericValues.length > 0 ? criaDrop() : '' }
       </div>
-      <table border="1">
+      <table className="table-body">
         <tr>
           <th>Nome</th>
           <th>Período de Rotação</th>

@@ -5,9 +5,11 @@ import Table from './Table';
 
 function App() {
   return (
-    <Provider>
-      <Table />
-    </Provider>
+    <div className="App">
+      <Provider>
+        <Table />
+      </Provider>
+    </div>
   );
 }
 
